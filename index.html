@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Codej Academy — Bientôt disponible</title>
+<meta name="description" content="Codej Academy arrive bientôt. Plateforme e-learning d'algorithmique et de programmation pour lycéens tunisiens." />
+<link rel="icon" href="favicon.png" />
+<style>
+  :root {
+    --indigo-dark: #0c1c33;
+    --indigo: #122a4d;
+    --mint: #3fa535;
+    --mint-light: #6fd45f;
+    --amber: #f5a524;
+    --paper: #f7f9fc;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 0%, #16305a 0%, var(--indigo-dark) 55%, #071120 100%);
+    color: var(--paper);
+    font-family: "Segoe UI", "Cairo", system-ui, -apple-system, sans-serif;
+    overflow: hidden;
+  }
+
+  canvas#rain {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.35;
+  }
+
+  .glow-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(90px);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .glow-orb.g1 {
+    width: 480px; height: 480px;
+    background: rgba(63, 165, 53, 0.35);
+    top: -160px; left: -120px;
+    animation: drift1 16s ease-in-out infinite;
+  }
+  .glow-orb.g2 {
+    width: 420px; height: 420px;
+    background: rgba(245, 165, 36, 0.22);
+    bottom: -140px; right: -100px;
+    animation: drift2 20s ease-in-out infinite;
+  }
+
+  @keyframes drift1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(60px, 40px) scale(1.12); }
+  }
+  @keyframes drift2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-50px, -30px) scale(1.08); }
+  }
+
+  .symbols {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .symbol {
+    position: absolute;
+    font-family: "Consolas", "Fira Code", monospace;
+    color: rgba(111, 212, 95, 0.55);
+    font-weight: 600;
+    user-select: none;
+    animation-name: floatUp;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    text-shadow: 0 0 12px rgba(63, 165, 53, 0.5);
+  }
+  .symbol.amber {
+    color: rgba(245, 165, 36, 0.55);
+    text-shadow: 0 0 12px rgba(245, 165, 36, 0.5);
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-120vh) rotate(20deg); opacity: 0; }
+  }
+
+  main {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+  }
+
+  .logo {
+    width: 96px;
+    height: 96px;
+    margin-bottom: 28px;
+    filter: drop-shadow(0 0 24px rgba(63, 165, 53, 0.55));
+    animation: floatLogo 4.5s ease-in-out infinite, fadeIn 0.9s ease-out;
+  }
+
+  @keyframes floatLogo {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(-3deg); }
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    background: rgba(63, 165, 53, 0.12);
+    border: 1px solid rgba(63, 165, 53, 0.35);
+    color: var(--mint-light);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+    animation: fadeIn 0.9s ease-out 0.1s both;
+  }
+  .badge .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--mint-light);
+    box-shadow: 0 0 8px var(--mint-light);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  h1 {
+    margin: 0 0 14px;
+    font-size: clamp(2.4rem, 7vw, 4.4rem);
+    line-height: 1.08;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    animation: fadeIn 0.9s ease-out 0.15s both;
+  }
+  h1 .brand {
+    background: linear-gradient(90deg, var(--mint-light), var(--amber));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 4s linear infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+
+  .typewriter {
+    font-family: "Consolas", "Fira Code", monospace;
+    font-size: clamp(1rem, 2.6vw, 1.3rem);
+    color: #b9c6de;
+    margin: 0 0 30px;
+    min-height: 1.6em;
+    animation: fadeIn 0.9s ease-out 0.25s both;
+  }
+  .typewriter .cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    background: var(--mint-light);
+    margin-inline-start: 4px;
+    vertical-align: -0.15em;
+    animation: blink 0.9s step-end infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .progress-wrap {
+    width: min(360px, 80vw);
+    animation: fadeIn 0.9s ease-out 0.35s both;
+  }
+  .progress-track {
+    position: relative;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+  .progress-fill {
+    position: absolute;
+    inset: 0;
+    width: 68%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--mint), var(--mint-light));
+    box-shadow: 0 0 14px rgba(63, 165, 53, 0.6);
+  }
+  .progress-fill::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+    width: 40%;
+    animation: sweep 1.8s ease-in-out infinite;
+  }
+  @keyframes sweep {
+    0% { transform: translateX(-120%); }
+    100% { transform: translateX(320%); }
+  }
+  .progress-label {
+    margin-top: 10px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: #7c8aa8;
+    text-transform: uppercase;
+  }
+
+  .contact {
+    margin-top: 40px;
+    font-size: 14px;
+    color: #7c8aa8;
+    animation: fadeIn 0.9s ease-out 0.45s both;
+  }
+  .contact a {
+    color: var(--mint-light);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(111, 212, 95, 0.35);
+  }
+  .contact a:hover { border-color: var(--mint-light); }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="rain"></canvas>
+<div class="glow-orb g1"></div>
+<div class="glow-orb g2"></div>
+<div class="symbols" id="symbols" aria-hidden="true"></div>
+
+<main>
+  <img class="logo" src="logo.png" alt="Codej Academy" />
+
+  <span class="badge"><span class="dot"></span> En construction</span>
+
+  <h1>Codej <span class="brand">Academy</span></h1>
+
+  <p class="typewriter"><span id="typed"></span><span class="cursor"></span></p>
+
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill"></div></div>
+    <div class="progress-label">Lancement en préparation</div>
+  </div>
+
+  <p class="contact">
+    Une question ? Écrivez-nous à
+    <a href="mailto:contact@codejacademy.me">contact@codejacademy.me</a>
+  </p>
+</main>
+
+<script>
+  // Typewriter effect cycling through a few lines
+  var lines = [
+    "Compilation de la plateforme en cours...",
+    "npm run build --production",
+    "Bientôt disponible pour les lycéens tunisiens.",
+    "Algorithmique • Programmation • Réussite au Bac"
+  ];
+  var typedEl = document.getElementById("typed");
+  var li = 0, ci = 0, deleting = false;
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function tick() {
+    var current = lines[li];
+    if (reduced) {
+      typedEl.textContent = current;
+      return;
+    }
+    if (!deleting) {
+      ci++;
+      typedEl.textContent = current.slice(0, ci);
+      if (ci === current.length) {
+        deleting = true;
+        setTimeout(tick, 1800);
+        return;
+      }
+      setTimeout(tick, 38);
+    } else {
+      ci--;
+      typedEl.textContent = current.slice(0, ci);
+      if (ci === 0) {
+        deleting = false;
+        li = (li + 1) % lines.length;
+        setTimeout(tick, 300);
+        return;
+      }
+      setTimeout(tick, 18);
+    }
+  }
+  tick();
+
+  // Floating code symbols in the background
+  var chars = ["{ }", "< />", "0 1", "if()", "=>", "// ", "( )", "[ ]", "fn", "let", "==", "&&", "++", "01", "10", "*", "#"];
+  var symbolsWrap = document.getElementById("symbols");
+  var count = window.innerWidth < 640 ? 14 : 26;
+
+  for (var i = 0; i < count; i++) {
+    var s = document.createElement("span");
+    s.className = "symbol" + (Math.random() < 0.35 ? " amber" : "");
+    s.textContent = chars[Math.floor(Math.random() * chars.length)];
+    var size = 14 + Math.random() * 22;
+    var left = Math.random() * 100;
+    var duration = 10 + Math.random() * 14;
+    var delay = Math.random() * 14;
+    s.style.left = left + "vw";
+    s.style.top = (100 + Math.random() * 20) + "vh";
+    s.style.fontSize = size + "px";
+    s.style.animationDuration = duration + "s";
+    s.style.animationDelay = "-" + delay + "s";
+    symbolsWrap.appendChild(s);
+  }
+
+  // Matrix-style code rain on canvas
+  var canvas = document.getElementById("rain");
+  var ctx = canvas.getContext("2d");
+  var glyphs = "01{}[]()<>/=+-;:.$#*ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  var fontSize = 16;
+  var columns, drops;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    columns = Math.floor(canvas.width / fontSize);
+    drops = new Array(columns).fill(0).map(function () {
+      return Math.random() * -100;
+    });
+  }
+  resize();
+  window.addEventListener("resize", resize);
+
+  function draw() {
+    ctx.fillStyle = "rgba(7, 17, 32, 0.12)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.font = fontSize + "px monospace";
+
+    for (var i = 0; i < drops.length; i++) {
+      var text = glyphs[Math.floor(Math.random() * glyphs.length)];
+      var x = i * fontSize;
+      var y = drops[i] * fontSize;
+      ctx.fillStyle = Math.random() < 0.08 ? "#f5a524" : "#3fa535";
+      ctx.fillText(text, x, y);
+
+      if (y > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }
+
+  var rainFrame;
+  function loop() {
+    draw();
+    rainFrame = requestAnimationFrame(loop);
+  }
+  if (!reduced) {
+    loop();
+  } else {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+</script>
+
+</body>
+</html>
